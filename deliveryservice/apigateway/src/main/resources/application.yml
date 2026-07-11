@@ -1,0 +1,51 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        # 1. Ruta Clientes
+        - id: customerservice-route
+          uri: lb://customer-service
+          predicates:
+            - Path=/api/clientes, /api/clientes/**
+
+        # 2. Ruta Menús
+        - id: menuservice-route
+          uri: lb://menu-service
+          predicates:
+            - Path=/api/menus, /api/menus/**
+
+        # 3. Ruta Pedidos
+        - id: orderservice-route
+          uri: lb://order-service
+          predicates:
+            - Path=/api/pedidos, /api/pedidos/**
+
+        # 4. Ruta Envíos
+        - id: deliveryservice-route
+          uri: lb://delivery-service
+          predicates:
+            - Path=/api/envios, /api/envios/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/
+  instance:
+    prefer-ip-address: true
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: 1. Clientes
+        url: /api/clientes/v3/api-docs
+      - name: 2. Menús
+        url: /api/menus/v3/api-docs
+      - name: 3. Pedidos
+        url: /api/pedidos/v3/api-docs
+      - name: 4. Envíos
+        url: /api/envios/v3/api-docs
